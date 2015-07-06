@@ -6,7 +6,7 @@ var compose = require('koa-compose');
 var n_path = require('path');
 var xml2js = require('xml2js');
 
-function StratRouter(app,options){
+function StratRouter(router,options){
     var _this = this;
     var use = [];
     events.EventEmitter.call(this);
@@ -14,16 +14,16 @@ function StratRouter(app,options){
     var path = cwd+options.ejsPath;
     var uriStart = options.uriPrefix || "";
 
-    _this.add = function(path,ctrl,noPattern){
+    _this.add = function(path,ctrl,noPattern,method){
         if(typeof path == "string")path = uriStart+path;
         var reg = noPattern ? path : patternURI(path);
         console.log("add router:"+reg);
-        _this.__addRoute(reg,CtrlPort(ctrl));
+        _this.__addRoute(reg,CtrlPort(ctrl),method);
     };
 
     _this.__addRoute = function(reg,ctr,method){
         if(!method)method = 'all';
-        app[method](reg,ctr);
+        router[method](reg,ctr);
     };
 
     _this.use = function (generator) {
